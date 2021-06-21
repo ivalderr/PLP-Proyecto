@@ -69,6 +69,14 @@ tokenize([N|R]) --> [C],{C>32},
                         {name(N,[C])},tokenize(R).
 tokenize([])-->[].
 
+% prefix/2
+prefix(P,L) :- append(P,_,L).
+% suffix/2
+suffix(S,L) :- append(_,S,L).
+sublist(SubL,L) :- suffix(S,L), prefix(SubL,S).
+
+% sublist(['(',T],L) :-
+
 case(['('|T],[H|L],[H|T]) :- L=[], H==')'.
 case(['('|T],[H|L],[S|R]) :- case(T,L,[S|R]).
 
@@ -79,9 +87,9 @@ case(['('|T],[H|L],[S|R]) :- case(T,L,[S|R]).
 %case([H|T],[H|L],[S|R]) :- case(T,L,[S|R]).
 
 assignStmt --> id, [=] , expr.
-expr --> expr1 ; expr, op1, expr1.
-expr1 --> expr0 ; expr1, op2, expr0.
-expr0 --> id ; entero ; numDecimal ; ['('] , expr , [')'].
+expr --> expr1 ; (expr, op1, expr1).
+expr1 --> expr0 ; (expr1, op2, expr0).
+expr0 --> id ; entero ; numDecimal ; (['('] , expr , [')']).
 op2 --> [*] ; [/].
 op1 --> [+] ; [-].
 
