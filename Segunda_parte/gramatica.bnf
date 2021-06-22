@@ -1,3 +1,5 @@
+% operation statement / parentesis multiples / return opcional /
+% value en condicional / void / assigment inside loops def / arreglos
 <function> ::=
   <datatype> fname '('
     [<datatype> arg_name>{',' <datatype> arg_name}]
@@ -7,15 +9,6 @@
       <variable> | <value> |
       <conditional> | <function_call_statement> ';'
   '}'
-
-<function_call_statement> ::=
-  Fname '(' [<arg>] ')' ';' |
-  <variable> '=' Fname '(' [<arg>] ')' ';'
-
-<arg> ::=
-  <variable>{',' <arg>} |
-  <value>{',' <arg>} |
-  <function_call_statement>{',' <arg>}
 
 <statement> ::=
   <assignment_statement> |
@@ -42,16 +35,25 @@
       {<logical_operator> <conditional>}
 
 <loop_statement> ::=
-  while ( <conditional> ) '{' <statement> '}' |
-  do '{' <statement> '}' while ( conditional ) ';'
+  while ( <conditional> ) '{' {<statement>} '}' |
+  do '{' {<statement>} '}' while ( <conditional> ) ';'
 
 <conditional_statement> ::=
-  if ( <conditional> ) '{' <statement> '}' |
-  if ( <conditional> ) '{' <statement> '}'
-  else '{' <statement> '}' |
-  if ( <conditional> ) '{' <statement> '}'
-  { else if ( <conditional> ) '{' <statement> '}' }
-  else '{' <statement> '}'
+  if ( <conditional> ) '{' {<statement>} '}' |
+  if ( <conditional> ) '{' {<statement>} '}'
+  else '{' {<statement>} '}' |
+  if ( <conditional> ) '{' {<statement>} '}'
+  { else if ( <conditional> ) '{' {<statement>} '}' }
+  else '{' {<statement>} '}'
+
+<arg> ::=
+  <variable>{',' <arg>} |
+  <value>{',' <arg>} |
+  <function_call_statement>{',' <arg>}
+
+<function_call_statement> ::=
+  fname '(' [<arg>] ')' ';' |
+  <variable> '=' fname '(' [<arg>] ')' ';'
 
 <variable> ::= (<letter> | _)[ {[<digit>] <letter>} ]
 
