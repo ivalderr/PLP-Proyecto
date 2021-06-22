@@ -1,0 +1,59 @@
+% operation statement / parentesis multiples / return opcional /
+% value en condicional / void / assigment inside loops def / arreglos
+<function> ::=
+  <datatype> function_name '('
+    [<datatype> arg_name>{',' <datatype> arg_name}]
+  ')' '{'
+    {<statement>}
+    return
+      <variable> | <value> |
+      <conditional> | <function_call_statement> ';'
+  '}'
+
+<function_call_statement> ::=
+  Fname '(' [<arg>] ')' ';' |
+  <variable> '=' Fname '(' [<arg>] ')' ';'
+
+<arg> ::=
+  <variable>{',' <arg>} |
+  <value>{',' <arg>} |
+  <function_call_statement>{',' <arg>}
+
+<statement> ::=
+  <assignment_statement> |
+  <loop_statement> |
+  <conditional_statement> |
+  <function_call_statement>
+
+<expression> ::=
+  (<value> | <variable> | <conditional> | <function_call_statement>)
+  {<operator> <expression>}
+
+<assignment_statement> ::=
+  <datatype> <variable> '=' <expression> ';'
+
+<conditional> :: =
+  [!] (<value> | <variable> | <function_call_statement>)
+      {<relational_operator> <conditional>}
+
+<loop_statement> ::=
+  while ( <conditional> ) '{' <statement> '}' |
+  do '{' <statement> '}' while ( conditional ) ';'
+
+<conditional_statement> ::=
+  if ( <conditional> ) '{' <statement> '}' |
+  if ( <conditional> ) '{' <statement> '}'
+  else '{' <statement> '}' |
+  if ( <conditional> ) '{' <statement> '}'
+  { else if ( <conditional> ) '{' <statement> '}' }
+  else '{' <statement> '}'
+
+<variable> ::= (<letter> | _)[ {[<digit>] <letter>} ]
+
+<datatype> ::= void | char | int | short | long | float | double
+<relational_operator> ::= == | > | < | => | =< | !=
+<value> ::= integer | decimal | string | character
+<operator> ::= + | - | * | /
+<letter> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
+             A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+<digit> ::= 0|1|2|3|4|5|6|7|8|9
