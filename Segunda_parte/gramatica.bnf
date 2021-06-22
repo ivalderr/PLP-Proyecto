@@ -1,5 +1,3 @@
-% operation statement / parentesis multiples / return opcional /
-% value en condicional / void / assigment inside loops def / arreglos
 <function> ::=
   <datatype> fname '('
     [<datatype> arg_name>{',' <datatype> arg_name}]
