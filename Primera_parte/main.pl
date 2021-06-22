@@ -75,7 +75,14 @@ prefix(P,L) :- append(P,_,L).
 suffix(S,L) :- append(_,S,L).
 sublist(SubL,L) :- suffix(S,L), prefix(SubL,S).
 
-% sublist(['(',T],L) :-
+% Accumulator
+accRev([H|T],A,R) :- accRev(T,[H|A],R).
+accRev([],A,A).
+rev(L,R) :- accRev(L,[],R).
+
+part(L) :-
+  sublist(['('|T],L),
+  sublist([')'|_],rev(T)).
 
 case(['('|T],[H|L],[H|T]) :- L=[], H==')'.
 case(['('|T],[H|L],[S|R]) :- case(T,L,[S|R]).
