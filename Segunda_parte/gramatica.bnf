@@ -1,7 +1,7 @@
 % operation statement / parentesis multiples / return opcional /
 % value en condicional / void / assigment inside loops def / arreglos
 <function> ::=
-  <datatype> <variable> '('
+  <datatype> fname '('
     [<datatype> arg_name>{',' <datatype> arg_name}]
   ')' '{'
     {<statement>}
@@ -30,7 +30,10 @@
   {<operator> <expression>}
 
 <assignment_statement> ::=
-  <datatype> <variable> '=' <expression> ';'
+  <datatype> <variable> ';' |
+  <datatype> <variable> '=' <expression> ';' |
+  <datatype> <variable>{'['(<variable>|integer)']'} ';' |
+  <datatype> <variable>'[]' ';'
 
 <conditional> :: =
   [!] (<value> | <variable> | <function_call_statement>)
