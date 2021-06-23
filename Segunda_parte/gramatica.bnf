@@ -1,4 +1,4 @@
-% parentesis multiples / arreglos
+% parentesis multiples / arreglos / return / for loop
 <function> ::=
   void fname '('
     ( [void] |
@@ -20,8 +20,7 @@
   <loop_statement> |
   <conditional_statement> |
   <function_call_statement> |
-  (<variable> | <value> | <function_call_statement>) |
-  return <expression> ';'
+  (<variable> | <value> | <function_call_statement>)
 
 <conditional> :: =
   [!] (<value> | <variable> | <function_call_statement>)
@@ -41,15 +40,20 @@
   <datatype> <variable>'[]' ';'
 
 <loop_statement> ::=
-  while ( <expression> ) '{' {<statement>} '}' |
-  do '{' {<statement>} '}' while ( <expression> ) ';'
+  while '(' <expression> ')' '{' {<statement>} '}' |
+  do '{' {<statement>} '}' while '(' <expression> ')' ';' |
+  for '(' [<assignment_statement>] ';'
+          [<assignment_statement>] ';'
+          [<assignment_statement>]
+      ')'
+      '{' {<statement>} '}'
 
 <conditional_statement> ::=
-  if ( <expression> ) '{' {<statement>} '}' |
-  if ( <expression> ) '{' {<statement>} '}'
+  if '(' <expression> ')' '{' {<statement>} '}' |
+  if '(' <expression> ')' '{' {<statement>} '}'
   else '{' {<statement>} '}' |
-  if ( <expression> ) '{' {<statement>} '}'
-  { else if ( <expression> ) '{' {<statement>} '}' }
+  if '(' <expression> ')' '{' {<statement>} '}'
+  { else if '(' <expression> ')' '{' {<statement>} '}' }
   else '{' {<statement>} '}'
 
 <arg> ::=

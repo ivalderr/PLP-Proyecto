@@ -20,10 +20,27 @@ int myFunction(void) {
   return x;
 }
 
-void main() {
-  int y = -1;
-  int x = myFunction() + 2 + (x>0 || x<2) + y;
+void loopFunc() {
+  int x,y,i;
+  for(myFunction() + 2 + (x>0 || x<2) + y, i++, x=1;
+      myFunction() + 2 + (x>0 || x<2) + y, i++, x=1;
+      myFunction() + 2 + (x>0 || x<2) + y, i++, x=1) {
+    printf("Infinite wild loop! \n");
+  }
+  return;
+  for(;;){
+    printf("Infinite loop! \n");
+  }
+}
 
+void main() {
+  int y = -1, c;
+  int x = myFunction() + 2 + (x>0 || x<2) + y;
+  int h = -5.0>-myFunction()>-1;
+  int j = 2 + (c=3+5) + 1;
+
+  loopFunc();
+  printf("-->%d,%d\n", h,-myFunction());
   myFunction();
   char msg[] = "Hello World!";
   printf("%d\n", x);
