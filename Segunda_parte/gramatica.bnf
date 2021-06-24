@@ -1,4 +1,3 @@
-% parentesis multiples / arreglos / return / for loop
 <function> ::=
   void fname '('
     ( [void] |
@@ -19,8 +18,8 @@
   <assignment_statement> |
   <loop_statement> |
   <conditional_statement> |
-  <function_call_statement> |
-  (<variable> | <value> | <function_call_statement>)
+  <expression> ';' |
+  return [<expression>] ';'
 
 <conditional> :: =
   [!] (<value> | <variable> | <function_call_statement>)
@@ -42,9 +41,12 @@
 <loop_statement> ::=
   while '(' <expression> ')' '{' {<statement>} '}' |
   do '{' {<statement>} '}' while '(' <expression> ')' ';' |
-  for '(' [<assignment_statement>] ';'
-          [<assignment_statement>] ';'
-          [<assignment_statement>]
+  for '(' [
+            (<assignment_statement> | <expression>)
+            {, (<assignment_statement> | <expression>)}
+          ] ';'
+          [<expression>{, <expression>}] ';'
+          [<expression>{, <expression>}]
       ')'
       '{' {<statement>} '}'
 
@@ -62,7 +64,7 @@
   <function_call_statement>{',' <arg>}
 
 <function_call_statement> ::=
-  fname '(' [<arg>] ')' ';'
+  fname '(' [<arg>] ')'
 
 <variable> ::= (<letter> | _)[ {[<digit>] <letter>} ]
 

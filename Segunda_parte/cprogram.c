@@ -39,6 +39,7 @@ void main() {
   int h = -5.0>-myFunction()>-1;
   int j = 2 + (c=3+5) + 1;
 
+  myFunction() + 2 + (x>0 || x<2) + y;
   loopFunc();
   printf("-->%d,%d\n", h,-myFunction());
   myFunction();
