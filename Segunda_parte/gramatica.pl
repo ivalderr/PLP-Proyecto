@@ -1,7 +1,10 @@
-variable --> "," , (digit ; letter).
-variable --> (letter ; "_"), variable.
+variable([H|T]) :-
+  (letter([H],[]) ; H=='_') ,
+  maplist(alfNum,T).
 
-letter(C) :- 96<C,C<123;
-              64<C, C<91;
-              47<C, C<58.
-digit(D) --> [D], {47 < D, D < 58}.
+alfNum(V) :- digit(V,[]); letter(V,[]).
+
+
+
+digit --> [0];[1];[2];[3];[4];[5];[6];[7];[8];[9].
+letter --> 'a';'b';'c'.
