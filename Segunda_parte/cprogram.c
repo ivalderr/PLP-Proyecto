@@ -1,9 +1,10 @@
 #include <stdio.h>
 
 int myFunction(void) {
-  int x = 1;
+  int x,y = 1;
 
-  x;
+  x,y=10;
+  x,y,2,5>2;
   "Hello";
   3;
   3.5;
@@ -31,6 +32,29 @@ void loopFunc() {
   for(;;){
     printf("Infinite loop! \n");
   }
+}
+
+void myArray() {
+  int a[2];
+  int b[] = {1,2,3};
+  int b1[4] = {1,2,3};
+  int c[] = {};
+  int c1[10] = {};
+  int d[2] = {1,2};
+  int a1[2], a2[] = {1,2};
+  int x=-3;
+  int ma[1][1][x][10>2 && 2<6 +1 ];
+  ma[0][0][0][1]=2;
+  int ma1[2][2] = {{1,myFunction()}, {1,1}};
+  int ma2[2][2] = {1,1,1,1};
+  char name[10];
+  double listd[] = {'c'};
+  int mad[2][2]={};
+
+  10%5;
+  //char string;
+  //int string;
+
 }
 
 void main() {

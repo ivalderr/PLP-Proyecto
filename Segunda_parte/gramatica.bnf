@@ -32,11 +32,10 @@
   {<operator> <expression>}
 
 <assignment_statement> ::=
-  <datatype> <variable> ';' |
-  <datatype> <variable> '=' <expression> ';' |
-  <variable> '=' <expression> ';' |
-  <datatype> <variable>{'['(<variable>|integer)']'} ';' |
-  <datatype> <variable>'[]' ';'
+  <datatype> <variable>{, <variable>} ';' |
+  <datatype> <variable> {, <variable>} '=' <expression> ';' |
+  <variable>{, <variable>} '=' <expression>';' |
+  [<datatype>] <array_statement> ';'
 
 <loop_statement> ::=
   while '(' <expression> ')' '{' {<statement>} '}' |
@@ -66,13 +65,19 @@
 <function_call_statement> ::=
   fname '(' [<arg>] ')'
 
+<array_statement> ::=
+  <variable>'[' ']' '=' '{' [<expression>{, <expression>}] '}' |
+  <variable>{'['(<variable>|natural)']'} ['=' '{' '}'] |
+  <variable>{'['(<variable>|natural)']'} '='
+    '{' <expression>{, <expression>} '}'
+
 <variable> ::= (<letter> | _)[ {[<digit>] <letter>} ]
 
 <datatype> ::= char | int | short | long | float | double
 <relational_operator> ::= == | > | < | => | =< | !=
 <logical_operator> ::= "&&" | "||" | "!"
-<operator> ::= + | - | * | /
-<value> ::= integer | decimal | string | character
+<operator> ::= + | - | * | / | %
+<value> ::= natural | integer | decimal | string | character
 <letter> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
              A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
 <digit> ::= 0|1|2|3|4|5|6|7|8|9
