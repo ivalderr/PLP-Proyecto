@@ -1,4 +1,0 @@
-void myFunc() {
-  int _count0 = 10;
-  return pot_2(_count0);
-}

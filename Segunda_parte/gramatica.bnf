@@ -57,13 +57,11 @@
   { else if '(' <expression> ')' '{' {<statement>} '}' }
   else '{' {<statement>} '}'
 
-<arg> ::=
-  <variable>{',' <arg>} |
-  <value>{',' <arg>} |
-  <function_call_statement>{',' <arg>}
+<args> ::=
+  <expression>{',' <expression>}.
 
 <function_call_statement> ::=
-  fname '(' [<arg>] ')'
+  fname '(' [<args>] ')'
 
 <array_statement> ::=
   <variable>'[' ']' '=' '{' [<expression>{, <expression>}] '}' |

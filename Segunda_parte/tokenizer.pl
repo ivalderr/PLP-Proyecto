@@ -15,7 +15,8 @@ gather(Chars) --> [C],  {alphaNumeric(C)}, gather(Rest), {Chars=[C|Rest]}.
 gather([]) --> {true}.
 alphaNumeric(C):- 96<C,C<123;
                   64<C, C<91;
-                  47<C, C<58.
+                  47<C, C<58;
+                  C==95.%Modifoed for C varables
 
 % - Floats ---------------------------------------------------------------------
 digit(D) --> [D], {47 < D, D < 58}.
