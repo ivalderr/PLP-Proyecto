@@ -24,9 +24,9 @@ statement -->
   assignment_statement ;
   loop_statement ;
   conditional_statement ;
-  expression [';'] ;
-  [return] expression';'
-  [return] ';'
+  expression, [';'] ;
+  [return], expression, ';' ;
+  [return], ';'.
 
 expression -->
   variable ; conditional.
@@ -46,7 +46,7 @@ relational_operator(OP) :-
   OP=='==' ; OP=='!=' ;
   OP=='>'  ; OP=='<'  ;
   OP=='=>' ; OP=='=<' .
-  
+
 % ===================================================================
 args([')'|[]]) :- true.
 
