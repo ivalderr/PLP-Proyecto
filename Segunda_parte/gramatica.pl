@@ -20,12 +20,34 @@ letter(L) --> [L], {96<L,L<123 ; 64<L, L<91}.
 argf --> datatype, variable.
 argf --> datatype, variable, [','] , argf.
 
-% expression([H|T]) :-
-%   ( (atom_codes(H,X),variable(X)) ;
-%     function_call_statement(H)
-%   ),
-%   operator, expression().
+statement -->
+  assignment_statement ;
+  loop_statement ;
+  conditional_statement ;
+  expression [';'] ;
+  [return] expression';'
+  [return] ';'
 
+expression -->
+  variable ; conditional.
+expression -->
+  (vairiable ; conditional), operator, expression.
+
+conditional -->
+  ([];[!]), variable.
+conditional -->
+  ([];[!]), variable, relational_operator, conditional.
+conditional -->
+  ([];[!]), variable, logical_operator, conditional.
+
+operator --> [+];[-];[*];[/];['%'].
+logical_operator --> [&&];['|'];[!].
+relational_operator(OP) :-
+  OP=='==' ; OP=='!=' ;
+  OP=='>'  ; OP=='<'  ;
+  OP=='=>' ; OP=='=<' .
+  
+% ===================================================================
 args([')'|[]]) :- true.
 
 args([H|T]) :-
@@ -40,14 +62,6 @@ function_call_statement([H,'(',V|T]) :-
   args(T).
 
 value --> natural;integer;float;string;character.
-
-relational_operator(OP) :-
-  OP=='==' ; OP=='!=' ;
-  OP=='>'  ; OP=='<'  ;
-  OP=='=>' ; OP=='=<' .
-
-logical_operator --> [&&];['|'];[!].
-operator --> [+];[-];[*];[/];['%'].
 
 % function -->
 %   datatype, variable, ['('], argf, [')'].
