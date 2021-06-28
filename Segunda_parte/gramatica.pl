@@ -2,11 +2,13 @@
 % TODO: manejar parentesis
 
 function -->
-  [void], variable, ['('], ([void];[];argf), [')'].
+  [void], variable, ['('], ([void];[];argf), [')'],
+  ['{'], statement_list, ([return];[]), [';'], ['}'].
 function -->
-  datatype, variable, ['('], ([void];[];argf), [')'].
+  datatype, variable, ['('], ([void];[];argf), [')'],
+  ['{'], statement_list, [return], expression ,[';'], ['}'].
 
-datatype --> [char];[int];[float];[double].
+datatype --> [char];[int];[float];[long];[short],[double].
 
 variable -->
   [V],
@@ -30,6 +32,9 @@ statement -->
   expression, [';'] ;
   [return], expression, ';' ;
   [return], ';'.
+
+statement_list --> statement.
+statement_list --> statement, statement_list.
 
 expression -->
   variable ; conditional.
@@ -61,18 +66,18 @@ assignment_statement -->
 
 loop_statement -->
   [while], ['('], expression, [')'],
-  ['{'], statement, ['}'].
+  ['{'], statement_list, ['}'].
 loop_statement -->
-  [do], ['{'], statement, ['}'],
+  [do], ['{'], statement_list, ['}'],
   [while], ['('], expression, [')'], [';'].
 
 conditional_statement -->
-  [if], ['('], expression, [')'], ['{'], statement, ['}'] ;
-  [if], ['('], expression, [')'], ['{'], statement, ['}'],
-  [else], ['{'], statement, ['}'] ;
-  [if], ['('], expression, [')'], ['{'], statement, ['}'],
-  [else], [if], ['('], expression, [')'], ['{'], statement, ['}'],
-  [else], ['{'], statement, ['}'].
+  [if], ['('], expression, [')'], ['{'], statement_list, ['}'] ;
+  [if], ['('], expression, [')'], ['{'], statement_list, ['}'],
+  [else], ['{'], statement_list, ['}'] ;
+  [if], ['('], expression, [')'], ['{'], statement_list, ['}'],
+  [else], [if], ['('], expression, [')'], ['{'], statement_list, ['}'],
+  [else], ['{'], statement_list, ['}'].
 
 
 % ===================================================================
