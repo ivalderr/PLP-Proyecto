@@ -1,8 +1,8 @@
-expression([H|T]) :-
-  ( (atom_codes(H,X),variable(X)) ;
-    function_call_statement(H) 
-  ),
-  operator, expression().
+% expression([H|T]) :-
+%   ( (atom_codes(H,X),variable(X)) ;
+%     function_call_statement(H)
+%   ),
+%   operator, expression().
 
 args([')'|[]]) :- true.
 
