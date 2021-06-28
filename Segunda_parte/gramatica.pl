@@ -6,7 +6,7 @@ function -->
   ['{'], statement_list, ([return];[]), [';'], ['}'].
 function -->
   datatype, variable, ['('], ([void];[];argf), [')'],
-  ['{'], statement_list, [return], expression ,[';'], ['}'].
+  ['{'], statement_list, [return], expression , [';'], ['}'].
 
 datatype --> [char];[int];[float];[long];[short],[double].
 
