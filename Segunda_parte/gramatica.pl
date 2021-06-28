@@ -1,3 +1,25 @@
+% TODO: void y otras palabras reservadas
+% TODO: manejar parentesis
+
+function -->
+  [void], variable, ['('], ([void];[];argf), [')'].
+function -->
+  datatype, variable, ['('], ([void];[];argf), [')'].
+
+datatype --> [char];[int];[float];[double].
+
+variable -->
+  [V],
+  {atom_codes(V,[H|T])},
+  {(letter(H,[H|_],_) ; H==95)},
+  {maplist(alphaNumeric,T)}.
+
+letter(L) --> [L], {96<L,L<123 ; 64<L, L<91}.
+
+% argf --> [].
+argf --> datatype, variable.
+argf --> datatype, variable, [','] , argf.
+
 % expression([H|T]) :-
 %   ( (atom_codes(H,X),variable(X)) ;
 %     function_call_statement(H)
@@ -17,8 +39,7 @@ function_call_statement([H,'(',V|T]) :-
   (varible(V);V==[]),
   args(T).
 
-datatype --> char;int;float;double.
-value --> natural;integer;decimal;string;character.
+value --> natural;integer;float;string;character.
 
 relational_operator(OP) :-
   OP=='==' ; OP=='!=' ;
@@ -28,12 +49,16 @@ relational_operator(OP) :-
 logical_operator --> [&&];['|'];[!].
 operator --> [+];[-];[*];[/];['%'].
 
-variable([H|T]) :-
-  (letter(H) ; H=='_') ,
-  maplist(alphaNumeric,T).
+% function -->
+%   datatype, variable, ['('], argf, [')'].
 
-letter(L) :- 96<L,L<123;
-             64<L, L<91.
+% variable(V) :-
+%   atom_codes(V,[H|T]),
+%   (letter(H) ; H=='_') ,
+%   maplist(alphaNumeric,T).
+%
+% letter(L) :- 96<L,L<123;
+%              64<L, L<91.
 
 % variable([H|T]) :-
 %   (letter([H],[]) ; H=='_') ,

@@ -1,1 +1,1 @@
-myFunction(varA,varB)
+int myFunction()
