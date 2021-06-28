@@ -16,6 +16,9 @@ variable -->
 
 letter(L) --> [L], {96<L,L<123 ; 64<L, L<91}.
 
+variable_list --> variable.
+variable_list --> variable, [','], variable_list.
+
 % argf --> [].
 argf --> datatype, variable.
 argf --> datatype, variable, [','] , argf.
@@ -31,7 +34,7 @@ statement -->
 expression -->
   variable ; conditional.
 expression -->
-  (vairiable ; conditional), operator, expression.
+  (variable ; conditional), operator, expression.
 
 conditional -->
   ([];[!]), variable.
@@ -42,25 +45,37 @@ conditional -->
 
 operator --> [+];[-];[*];[/];['%'].
 logical_operator --> [&&];['|'];[!].
-relational_operator(OP) :-
-  OP=='==' ; OP=='!=' ;
-  OP=='>'  ; OP=='<'  ;
-  OP=='=>' ; OP=='=<' .
+relational_operator --> [==];[>];[<];[=<];[=>];['!='].
+
+argfc -->
+  expression;
+  expression, [','], argfc.
+
+function_call_statement -->
+  variable, ['('] , argfc , [')'].
+
+assignment_statement -->
+  datatype, variable_list, [';'] ;
+  datatype, variable_list, ['='], expression;
+  variable_list, ['='], expression.
+
+loop_statement -->
+  [while], ['('], expression, [')'],
+  ['{'], statement, ['}'].
+loop_statement -->
+  [do], ['{'], statement, ['}'],
+  [while], ['('], expression, [')'], [';'].
+
+conditional_statement -->
+  [if], ['('], expression, [')'], ['{'], statement, ['}'] ;
+  [if], ['('], expression, [')'], ['{'], statement, ['}'],
+  [else], ['{'], statement, ['}'] ;
+  [if], ['('], expression, [')'], ['{'], statement, ['}'],
+  [else], [if], ['('], expression, [')'], ['{'], statement, ['}'],
+  [else], ['{'], statement, ['}'].
+
 
 % ===================================================================
-args([')'|[]]) :- true.
-
-args([H|T]) :-
-  variable(H);
-  function_call_statement(H);
-  args(T).
-
-function_call_statement([H,'(',V|T]) :-
-  atom_codes(H,X),
-  variable(X),
-  (varible(V);V==[]),
-  args(T).
-
 value --> natural;integer;float;string;character.
 
 % function -->
