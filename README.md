@@ -1,2 +1,2 @@
 # PLP-Proyecto
-Repositorio del proyecto en Prolog de la Materia Principios de Lenguajes de Programación
+Repositorio de los proyectos de la Materia Principios de Lenguajes de Programación, en la Maestría en Ciencias Computacionales de la ESPOL.
