@@ -32,20 +32,12 @@ type city struct {
 
 func main() {
   router := gin.Default()
+
+  //router.GET("/cities/", getCities)
   router.GET("/cityByCoor/:lon/:lat", getCityByCoor)
   router.GET("/cityByName/:name", getCityByName)
 
   router.Run("localhost:8080")
-
-  /*jsonData := map[string]string{"firstname": "Nic", "lastname": "Raboy"}
-  jsonValue, _ := json.Marshal(jsonData)
-  response, err = http.Post("https://httpbin.org/post", "application/json", bytes.NewBuffer(jsonValue))
-  if err != nil {
-      fmt.Printf("The HTTP request failed with error %s\n", err)
-  } else {
-      data, _ := ioutil.ReadAll(response.Body)
-      fmt.Println(string(data))
-  */
 }
 
 func getCityByCoor(c *gin.Context) {
@@ -61,14 +53,33 @@ func getCityByName(c *gin.Context) {
   name := c.Param("name")
 
   getCityImageByName(name)
+  getCityInfoByName(name)
 
   c.IndentedJSON(http.StatusOK, gin.H{"message": "Image downloaded"})
+}
+
+func getCityInfoByName(name string) {
+  endpoint, _ := url.Parse("http://api.openweathermap.org/data/2.5/weather")
+  queryParams := endpoint.Query()
+  queryParams.Set("q",name)
+  queryParams.Set("appid","8b37876e18ca7d87a1149202b5a68c56")
+  endpoint.RawQuery = queryParams.Encode()
+	response, err := http.Get(endpoint.String())
+
+  if err != nil {
+    fmt.Printf("The HTTP request failed with error %s\n", err)
+  } else {
+    f, _ := os.Create("info.txt")
+    data, _ := ioutil.ReadAll(response.Body)
+    f.Write(data)
+    f.Close()
+  }
+  //response, err := http.Get("?q=guayaquil&appid=8b37876e18ca7d87a1149202b5a68c56")
 }
 
 func getCityImageByName(city string) string {
   var path string
 
-  //response, err := http.Get("http://api.openweathermap.org/data/2.5/weather?q=guayaquil&appid=8b37876e18ca7d87a1149202b5a68c56")
   endpoint, _ := url.Parse("https://image.maps.ls.hereapi.com/mia/1.6/mapview")
   queryParams := endpoint.Query()
   queryParams.Set("ci",city)
@@ -98,7 +109,6 @@ func getCityImageByCoor(lon, lat float64) string {
   var path string
   geoc := fmt.Sprint(lon,",",lat)
 
-  //response, err := http.Get("http://api.openweathermap.org/data/2.5/weather?q=guayaquil&appid=8b37876e18ca7d87a1149202b5a68c56")
   endpoint, _ := url.Parse("https://image.maps.ls.hereapi.com/mia/1.6/mapview")
   queryParams := endpoint.Query()
   queryParams.Set("c",geoc)
