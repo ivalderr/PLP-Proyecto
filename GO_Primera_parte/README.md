@@ -9,15 +9,12 @@ https://developer.here.com/documentation/map-image/dev_guide/topics/quick-start-
 
 <b>API Endpoints</b> <br>
 
-Retorna información de todas las ciudades <br>
-/cities <br>
 Retorna información según las geo coordenadas dadas <br>
 /cityByGeoCoordinates/:lon/:lat <br>
 Retorna Información de una ciudad según su nombre <br>
 /cityByName/:name <br>
 
 <b>Ejemplos:</b> <br><br>
-http://localhost:8080/cities <br>
 http://localhost:8080/cityByCoor/-118.2437/34.0522 <br>
 http://localhost:8080/cityByName/los angeles <br>
 http://localhost:8080/cityByName/los%20angeles <br>

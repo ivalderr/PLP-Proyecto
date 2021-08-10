@@ -10,6 +10,8 @@ import (
   "os"
   "github.com/gin-gonic/gin"
   "encoding/json"
+  "log"
+  "strings"
 )
 
 // city represents data about a city.
@@ -32,7 +34,6 @@ type city struct {
 func main() {
   router := gin.Default()
 
-  //router.GET("/cities/", getCities)
   router.GET("/cityByCoor/:lon/:lat", getCityByCoor)
   router.GET("/cityByName/:name", getCityByName)
 
@@ -40,7 +41,6 @@ func main() {
 }
 
 var apiPath = "localhost:8080"
-var cities = []city{}
 var ci = city{}
 
 func getCityByName(c *gin.Context) {
@@ -62,7 +62,7 @@ func getCityInfoByName(name string) error {
 	response, err := http.Get(endpoint.String())
 
   if err != nil {
-    return errors.New("The HTTP request failed with error "+err.Error())
+    log.Fatal("The HTTP request failed with error "+err.Error())
   } else {
     var result map[string]interface{}
 
@@ -92,9 +92,7 @@ func getCityInfoByName(name string) error {
   return nil
 }
 
-func getCityImageByName(city string) string {
-  var path string
-
+func getCityImageByName(city string) {
   endpoint, _ := url.Parse("https://image.maps.ls.hereapi.com/mia/1.6/mapview")
   queryParams := endpoint.Query()
   queryParams.Set("ci",city)
@@ -109,15 +107,13 @@ func getCityImageByName(city string) string {
 	response, err := http.Get(endpoint.String())
 
   if err != nil {
-    fmt.Printf("The HTTP request failed with error %s\n", err)
+    log.Fatal("The HTTP request failed with error "+err.Error())
   } else {
     f, _ := os.Create("images/"+city+".jpg")
     data, _ := ioutil.ReadAll(response.Body)
     f.Write(data)
 		f.Close()
   }
-
-  return path
 }
 
 func getCityByCoor(c *gin.Context) {
@@ -141,7 +137,7 @@ func getCityInfoByCoor(lon, lat float64) error {
 	response, err := http.Get(endpoint.String())
 
   if err != nil {
-    return errors.New("The HTTP request failed with error "+err.Error())
+    log.Fatal("The HTTP request failed with error "+err.Error())
   } else {
     var result map[string]interface{}
 
@@ -161,7 +157,7 @@ func getCityInfoByCoor(lon, lat float64) error {
       ci.Humidity  = result["main"].(map[string]interface{})["humidity"].(float64)
       ci.WindSpeed = result["wind"].(map[string]interface{})["speed"].(float64)
       ci.WindDeg  = result["wind"].(map[string]interface{})["deg"].(float64)
-      ci.URL = "/images/"+ci.Name+".jpg"
+      ci.URL = "/images/"+strings.ToLower(ci.Name)+".jpg"
 
       getCityImageByCoor(lon,lat)
     } else {
@@ -171,8 +167,7 @@ func getCityInfoByCoor(lon, lat float64) error {
   return nil
 }
 
-func getCityImageByCoor(lon, lat float64) string {
-  var path string
+func getCityImageByCoor(lon, lat float64) {
   geoc := fmt.Sprint(lat,",",lon)
 
   endpoint, _ := url.Parse("https://image.maps.ls.hereapi.com/mia/1.6/mapview")
@@ -189,13 +184,11 @@ func getCityImageByCoor(lon, lat float64) string {
 	response, err := http.Get(endpoint.String())
 
   if err != nil {
-    fmt.Printf("The HTTP request failed with error %s\n", err)
+    log.Fatal("The HTTP request failed with error "+err.Error())
   } else {
-    f, _ := os.Create("images/"+ci.Name+".jpg")
+    f, _ := os.Create("images/"+strings.ToLower(ci.Name)+".jpg")
     data, _ := ioutil.ReadAll(response.Body)
     f.Write(data)
 		f.Close()
   }
-
-  return path
 }
