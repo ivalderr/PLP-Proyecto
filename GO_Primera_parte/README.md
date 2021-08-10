@@ -7,6 +7,6 @@ Retorna información según las geo coordenadas dadas <br>
 Retorna Información de una ciudad según su nombre <br>
 /cityByName/:name <br>
 
-Ejemplos:
+Ejemplos: <br>
 http://localhost:8080/cityByName/los angeles <br>
 http://localhost:8080/cityByName/los%20angeles

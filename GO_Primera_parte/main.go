@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "errors"
   "strconv"
   "io/ioutil"
   "net/http"
@@ -35,31 +36,24 @@ func main() {
   router.GET("/cityByCoor/:lon/:lat", getCityByCoor)
   router.GET("/cityByName/:name", getCityByName)
 
-  router.Run("localhost:8080")
+  router.Run(apiPath)
 }
 
+var apiPath = "localhost:8080"
 var cities = []city{}
-
-func getCityByCoor(c *gin.Context) {
-  lon,_ := strconv.ParseFloat(c.Param("lon"),64)
-  lat,_ := strconv.ParseFloat(c.Param("lat"),64)
-
-  getCityImageByCoor(lon,lat)
-
-  c.IndentedJSON(http.StatusOK, gin.H{"message": "Image downloaded"})
-}
+var ci = city{}
 
 func getCityByName(c *gin.Context) {
   name := c.Param("name")
 
-  getCityImageByName(name)
-  data := getCityInfoByName(name)
-
-  //c.IndentedJSON(http.StatusOK, gin.H{"message": "Image downloaded"})
-  c.IndentedJSON(http.StatusOK, data)
+  if err := getCityInfoByName(name); err == nil {
+    c.IndentedJSON(http.StatusOK, ci)
+  } else {
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": err.Error()})
+  }
 }
 
-func getCityInfoByName(name string) string {
+func getCityInfoByName(name string) error {
   endpoint, _ := url.Parse("http://api.openweathermap.org/data/2.5/weather")
   queryParams := endpoint.Query()
   queryParams.Set("q",name)
@@ -68,36 +62,34 @@ func getCityInfoByName(name string) string {
 	response, err := http.Get(endpoint.String())
 
   if err != nil {
-    fmt.Printf("The HTTP request failed with error %s\n", err)
+    return errors.New("The HTTP request failed with error "+err.Error())
   } else {
-    f, _ := os.Create("info.json")
-    data, _ := ioutil.ReadAll(response.Body)
-    f.Write(data)
-    f.Close()
-
     var result map[string]interface{}
+
+    data, _ := ioutil.ReadAll(response.Body)
     json.Unmarshal([]byte(data), &result)
 
     if result["cod"] != "404" {
-      ci := city {
-        ID   : result["id"].(float64),
-        Name : fmt.Sprintf("%v", result["name"]),
-        Country : fmt.Sprintf("%v", result["sys"].(map[string]interface{})["country"]),
-        Timezone : result["timezone"].(float64),
-        Lon : result["coord"].(map[string]interface{})["lon"].(float64),
-        Lat : result["coord"].(map[string]interface{})["lat"].(float64),
-        Temperature : result["main"].(map[string]interface{})["temp"].(float64),
-        FeelsLike : result["main"].(map[string]interface{})["feels_like"].(float64),
-        Pressure  : result["main"].(map[string]interface{})["pressure"].(float64),
-        Humidity  : result["main"].(map[string]interface{})["humidity"].(float64),
-        WindSpeed : result["wind"].(map[string]interface{})["speed"].(float64),
-        WindDeg  : result["wind"].(map[string]interface{})["deg"].(float64),
-        URL : " ",
-      }
-      return ci.Name
+      ci.ID   = result["id"].(float64)
+      ci.Name = fmt.Sprintf("%v", result["name"])
+      ci.Country = fmt.Sprintf("%v", result["sys"].(map[string]interface{})["country"])
+      ci.Timezone = result["timezone"].(float64)
+      ci.Lon = result["coord"].(map[string]interface{})["lon"].(float64)
+      ci.Lat = result["coord"].(map[string]interface{})["lat"].(float64)
+      ci.Temperature = result["main"].(map[string]interface{})["temp"].(float64)
+      ci.FeelsLike = result["main"].(map[string]interface{})["feels_like"].(float64)
+      ci.Pressure  = result["main"].(map[string]interface{})["pressure"].(float64)
+      ci.Humidity  = result["main"].(map[string]interface{})["humidity"].(float64)
+      ci.WindSpeed = result["wind"].(map[string]interface{})["speed"].(float64)
+      ci.WindDeg  = result["wind"].(map[string]interface{})["deg"].(float64)
+      ci.URL = "/images/"+name+".jpg"
+
+      getCityImageByName(name)
+    } else {
+      return errors.New("Can't find the specified city :(")
     }
   }
-  return "OK"
+  return nil
 }
 
 func getCityImageByName(city string) string {
@@ -128,9 +120,60 @@ func getCityImageByName(city string) string {
   return path
 }
 
+func getCityByCoor(c *gin.Context) {
+  lon,_ := strconv.ParseFloat(c.Param("lon"),64)
+  lat,_ := strconv.ParseFloat(c.Param("lat"),64)
+
+  if err := getCityInfoByCoor(lon,lat); err == nil {
+    c.IndentedJSON(http.StatusOK, ci)
+  } else {
+    c.IndentedJSON(http.StatusNotFound, gin.H{"message": err.Error()})
+  }
+}
+
+func getCityInfoByCoor(lon, lat float64) error {
+  endpoint, _ := url.Parse("http://api.openweathermap.org/data/2.5/weather")
+  queryParams := endpoint.Query()
+  queryParams.Set("lon",fmt.Sprintf("%v", lon))
+  queryParams.Set("lat",fmt.Sprintf("%v", lat))
+  queryParams.Set("appid","8b37876e18ca7d87a1149202b5a68c56")
+  endpoint.RawQuery = queryParams.Encode()
+	response, err := http.Get(endpoint.String())
+
+  if err != nil {
+    return errors.New("The HTTP request failed with error "+err.Error())
+  } else {
+    var result map[string]interface{}
+
+    data, _ := ioutil.ReadAll(response.Body)
+    json.Unmarshal([]byte(data), &result)
+
+    if result["cod"] != "404" {
+      ci.ID   = result["id"].(float64)
+      ci.Name = fmt.Sprintf("%v", result["name"])
+      ci.Country = fmt.Sprintf("%v", result["sys"].(map[string]interface{})["country"])
+      ci.Timezone = result["timezone"].(float64)
+      ci.Lon = result["coord"].(map[string]interface{})["lon"].(float64)
+      ci.Lat = result["coord"].(map[string]interface{})["lat"].(float64)
+      ci.Temperature = result["main"].(map[string]interface{})["temp"].(float64)
+      ci.FeelsLike = result["main"].(map[string]interface{})["feels_like"].(float64)
+      ci.Pressure  = result["main"].(map[string]interface{})["pressure"].(float64)
+      ci.Humidity  = result["main"].(map[string]interface{})["humidity"].(float64)
+      ci.WindSpeed = result["wind"].(map[string]interface{})["speed"].(float64)
+      ci.WindDeg  = result["wind"].(map[string]interface{})["deg"].(float64)
+      ci.URL = "/images/"+ci.Name+".jpg"
+
+      getCityImageByCoor(lon,lat)
+    } else {
+      return errors.New("Can't find the specified city :(")
+    }
+  }
+  return nil
+}
+
 func getCityImageByCoor(lon, lat float64) string {
   var path string
-  geoc := fmt.Sprint(lon,",",lat)
+  geoc := fmt.Sprint(lat,",",lon)
 
   endpoint, _ := url.Parse("https://image.maps.ls.hereapi.com/mia/1.6/mapview")
   queryParams := endpoint.Query()
@@ -148,7 +191,7 @@ func getCityImageByCoor(lon, lat float64) string {
   if err != nil {
     fmt.Printf("The HTTP request failed with error %s\n", err)
   } else {
-    f, _ := os.Create("images/map.jpg")
+    f, _ := os.Create("images/"+ci.Name+".jpg")
     data, _ := ioutil.ReadAll(response.Body)
     f.Write(data)
 		f.Close()
