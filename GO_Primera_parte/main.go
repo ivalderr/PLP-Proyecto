@@ -8,15 +8,13 @@ import (
   "net/url"
   "os"
   "github.com/gin-gonic/gin"
-  //"bytes"
-  //"encoding/json"
+  "encoding/json"
 )
 
 // city represents data about a city.
 type city struct {
-  ID          string  `json:"id"`
+  ID          float64  `json:"id"`
   Name        string  `json:"name"`
-  Code        float64 `json:"code"`
   Country     string  `json:"country"`
   Timezone    float64 `json:"timeZone"`
   Lon         float64 `json:"lon"`
@@ -40,6 +38,8 @@ func main() {
   router.Run("localhost:8080")
 }
 
+var cities = []city{}
+
 func getCityByCoor(c *gin.Context) {
   lon,_ := strconv.ParseFloat(c.Param("lon"),64)
   lat,_ := strconv.ParseFloat(c.Param("lat"),64)
@@ -53,12 +53,13 @@ func getCityByName(c *gin.Context) {
   name := c.Param("name")
 
   getCityImageByName(name)
-  getCityInfoByName(name)
+  data := getCityInfoByName(name)
 
-  c.IndentedJSON(http.StatusOK, gin.H{"message": "Image downloaded"})
+  //c.IndentedJSON(http.StatusOK, gin.H{"message": "Image downloaded"})
+  c.IndentedJSON(http.StatusOK, data)
 }
 
-func getCityInfoByName(name string) {
+func getCityInfoByName(name string) string {
   endpoint, _ := url.Parse("http://api.openweathermap.org/data/2.5/weather")
   queryParams := endpoint.Query()
   queryParams.Set("q",name)
@@ -69,12 +70,34 @@ func getCityInfoByName(name string) {
   if err != nil {
     fmt.Printf("The HTTP request failed with error %s\n", err)
   } else {
-    f, _ := os.Create("info.txt")
+    f, _ := os.Create("info.json")
     data, _ := ioutil.ReadAll(response.Body)
     f.Write(data)
     f.Close()
+
+    var result map[string]interface{}
+    json.Unmarshal([]byte(data), &result)
+
+    if result["cod"] != "404" {
+      ci := city {
+        ID   : result["id"].(float64),
+        Name : fmt.Sprintf("%v", result["name"]),
+        Country : fmt.Sprintf("%v", result["sys"].(map[string]interface{})["country"]),
+        Timezone : result["timezone"].(float64),
+        Lon : result["coord"].(map[string]interface{})["lon"].(float64),
+        Lat : result["coord"].(map[string]interface{})["lat"].(float64),
+        Temperature : result["main"].(map[string]interface{})["temp"].(float64),
+        FeelsLike : result["main"].(map[string]interface{})["feels_like"].(float64),
+        Pressure  : result["main"].(map[string]interface{})["pressure"].(float64),
+        Humidity  : result["main"].(map[string]interface{})["humidity"].(float64),
+        WindSpeed : result["wind"].(map[string]interface{})["speed"].(float64),
+        WindDeg  : result["wind"].(map[string]interface{})["deg"].(float64),
+        URL : " ",
+      }
+      return ci.Name
+    }
   }
-  //response, err := http.Get("?q=guayaquil&appid=8b37876e18ca7d87a1149202b5a68c56")
+  return "OK"
 }
 
 func getCityImageByName(city string) string {
@@ -96,7 +119,7 @@ func getCityImageByName(city string) string {
   if err != nil {
     fmt.Printf("The HTTP request failed with error %s\n", err)
   } else {
-    f, _ := os.Create("images/map.jpg")
+    f, _ := os.Create("images/"+city+".jpg")
     data, _ := ioutil.ReadAll(response.Body)
     f.Write(data)
 		f.Close()
@@ -133,39 +156,3 @@ func getCityImageByCoor(lon, lat float64) string {
 
   return path
 }
-/*
-// getAlbums responds with the list of all albums as JSON.
-func getAlbums(c *gin.Context) {
-  c.IndentedJSON(http.StatusOK, albums)
-}
-
-// postAlbums adds an album from JSON received in the request body.
-func postAlbums(c *gin.Context) {
-  var newAlbum album
-
-  // Call BindJSON to bind the received JSON to
-  // newAlbum.
-  if err := c.BindJSON(&newAlbum); err != nil {
-      return
-  }
-
-  // Add the new album to the slice.
-  albums = append(albums, newAlbum)
-  c.IndentedJSON(http.StatusCreated, newAlbum)
-}
-
-// getAlbumByID locates the album whose ID value matches the id
-// parameter sent by the client, then returns that album as a response.
-func getAlbumByID(c *gin.Context) {
-  id := c.Param("id")
-
-  // Loop over the list of albums, looking for
-  // an album whose ID value matches the parameter.
-  for _, a := range albums {
-      if a.ID == id {
-          c.IndentedJSON(http.StatusOK, a)
-          return
-      }
-  }
-  c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-}*/

@@ -6,3 +6,7 @@ Retorna información según las geo coordenadas dadas <br>
 /cityByGeoCoordinates/:lon/:lat <br>
 Retorna Información de una ciudad según su nombre <br>
 /cityByName/:name <br>
+
+Ejemplos:
+http://localhost:8080/cityByName/los angeles
+http://localhost:8080/cityByName/los%20angeles
