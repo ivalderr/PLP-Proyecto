@@ -8,5 +8,5 @@ Retorna Información de una ciudad según su nombre <br>
 /cityByName/:name <br>
 
 Ejemplos:
-http://localhost:8080/cityByName/los angeles
+http://localhost:8080/cityByName/los angeles <br>
 http://localhost:8080/cityByName/los%20angeles
