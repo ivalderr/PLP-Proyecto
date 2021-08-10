@@ -1,4 +1,6 @@
-Proyecto GO PLP
+<b>Proyecto:</b> Implementación de RESTful API en Golang.<br>
+
+Enpoints retornan información de ciudades segun su nombre o geo locación. Se utilizaron dos RESTful API:<br>
 
 Retorna información de todas las ciudades <br>
 /cities <br>
