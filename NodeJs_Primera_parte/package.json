@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
+  "name": "YourChatRoom",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "Chatbot test proyect",
   "dependencies": {
     "socket.io": "^4.1.3"
   }
